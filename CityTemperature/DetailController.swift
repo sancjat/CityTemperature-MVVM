@@ -28,7 +28,9 @@ class DetailController: UIViewController {
     }
     
     
+    
     func MakeScreenView()  {
+        
         EventTitleLbl.text = arrofDict.value(forKey: "name") as? String
         EventDescriptionLbl.text = "Its climate is \(arrofDict.value(forKey: "weatherdescription") ?? "" )"
         EventMaxTempLbl.text = "Its max temperature is: \(arrofDict.value(forKey: "maxtemp") ?? "" )"

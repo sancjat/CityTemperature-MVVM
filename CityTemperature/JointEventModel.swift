@@ -13,7 +13,7 @@ class JointEventModel: NSObject {
     var RowTemp : String!
     var Rowhumidity : String!
     var Rowdescription : String!
-    var arrofdata = [NSManagedObject]()
+  
     
     class func getvaluesOfSelectTemp(arrOfListData : NSArray)-> [JointEventModel]
     {
@@ -38,14 +38,7 @@ class JointEventModel: NSObject {
         return selectTempModelArray
     }
     
-    class func MakeTableView() -> [NSManagedObject]
-    {
-        let tempModel:TempModel  =  TempModel()
-        
-        return tempModel.retrieveData()
-    }
-    
-    
+
     class func setTemp()  {
         
         let remoteHostStatusIntrnet:Bool   = obj_app.checkNetworkStatus()
@@ -63,7 +56,7 @@ class JointEventModel: NSObject {
                 DispatchQueue.main.async(execute: { () -> Void in
                     do
                     {
-                        let _ = URLSession.shared.dataTask(with: URL(string: i)!, completionHandler: { (data : Data? , resp : URLResponse? , error: Error?) -> Void in
+                        let session = URLSession.shared.dataTask(with: URL(string: i)!, completionHandler: { (data : Data? , resp : URLResponse? , error: Error?) -> Void in
                             if let jsondata = data {
                                 let jsonBase = try? JSONSerialization.jsonObject(with: jsondata, options: JSONSerialization.ReadingOptions.mutableContainers)
                                 print(jsonBase as! NSDictionary)
@@ -74,14 +67,19 @@ class JointEventModel: NSObject {
                                     obj_app.stopAcitivity()
                                     DispatchQueue.main.async {
                                         let ModelClassArray = JointEventModel.getvaluesOfSelectTemp(arrOfListData: allTempValue)
+                                        
                                         print(ModelClassArray)
-                                        let tempModel = TempModel()
-                                        tempModel.deleteData()
-                                       tempModel.createData(ModelClassArray)
+                                        TempModel().deleteData()
+                                        TempModel().createData(ModelClassArray)
+                                        let mainController     =   (obj_app.window?.rootViewController?.children.first as? ViewController)!
+                                        mainController.arrofdata = TempModel().retrieveData()
+                                        mainController.tableView.reloadData()
+                                        
                                     }
                                 }
                             }
-                        }).resume()
+                        })
+                        session.resume()
                     }
                     catch
                     {

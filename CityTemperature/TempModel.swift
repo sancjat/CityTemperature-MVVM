@@ -22,9 +22,6 @@ class TempModel: NSObject {
         //Now let’s create an entity and new user records.
         let userEntity = NSEntityDescription.entity(forEntityName: "City", in: managedContext)!
         
-        //final, we need to add some data to our newly created record for each keys using
-      
-        //arrofdata.removeAll()
         for i in 0..<modelclassArray.count {
             let objmodel = modelclassArray[i]
             let user = NSManagedObject(entity: userEntity, insertInto: managedContext)
@@ -40,6 +37,7 @@ class TempModel: NSObject {
         //Now we have set all the values. The next step is to save them inside the Core Data
         
         do {
+            
             try managedContext.save()
             
         } catch let error as NSError {
@@ -80,26 +78,24 @@ class TempModel: NSObject {
     
     func retrieveData()-> [NSManagedObject]  {
         
-        arrofdata.removeAll()
-        //We need to create a context from this container
-        let managedContext = obj_app.persistentContainer.viewContext
         
         //Prepare the request of type NSFetchRequest  for the entity
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "City")
        
         do {
             
-            arrofdata = try managedContext.fetch(fetchRequest) as! [NSManagedObject]
-            print(arrofdata)
+            result = try managedContext.fetch(fetchRequest) as! [NSManagedObject]
+            print(result)
 
         } catch {
             
             print("Failed")
         }
         
-        return arrofdata
+        return result
         
     }
+    
     
     
 }
